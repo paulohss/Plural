@@ -1,6 +1,7 @@
 ﻿body{
     font-family: sans-serif;
     font-size: 14px;
+    margin:0;
 }
 
 
@@ -20,16 +21,23 @@ input[type=submit], input[type=password], textarea{
 
 #main{
     background-color:#eee;
-
+    padding: 4px;
+    margin: 0;
 }
 
 #footer{
     background-color:#222;
     color:#eee; 
+    padding: 8px 5px;
+    position:fixed;
+    bottom: 0;
+    width:100%;
 }
 
 .headshot{
     width:50px; 
+    border:1px solid #222;
+    padding: 3px;
 }
 
 .menu{
@@ -44,3 +52,28 @@ input[type=submit], input[type=password], textarea{
 .menu li.active{
       font-weight:bold;
 }
+
+#sidebar{
+    background:#2a2c36;
+    color:#eee;
+    position:fixed;
+    height: 100%;
+    width: 250px;
+    overflow: hidden;
+    left:0;
+    margin:0;
+}
+
+
+#sidebar.hide-sidebar{
+    left: -250px;
+}
+
+#wrapper{
+    margin:0 0 0 250px;
+}
+
+#wrapper.hide-sidebar{
+    margin-left:0;
+}
+
