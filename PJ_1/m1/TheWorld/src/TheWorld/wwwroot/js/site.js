@@ -21,7 +21,11 @@
 
     $("#sidebarToggle").on("click", function () {
         $sideAndWrapper.toggleClass("hide-sidebar");
-    });
-     
+        if ($sideAndWrapper.hasClass("hide-sidebar")) {
+            $(this).text("Show");
+        }else{
+            $(this).text("Hide");
+        }
+        });     
 
 })();
