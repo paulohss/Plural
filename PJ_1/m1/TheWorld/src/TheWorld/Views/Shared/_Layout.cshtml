@@ -7,22 +7,22 @@
 <head>
     <title>The World - @ViewBag.Title</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="css/site.css" />
+    <link rel="stylesheet" href="~/css/site.css" /> <!--'~' app root-->
 </head>
 <body>
     <div id="sidebar">
-        <img src="img/user1.jpg" alt="user" class="headshot" />
+        <img src="~/img/user1.jpg" alt="user" class="headshot" />
         <span id="username">PH</span>
         <ul class="menu">
-            <li class="active"><a hef="#">Home</a> </li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Contact</a></li>
+            <li class="active"><a asp-controller="app" asp-action="index">Home</a> </li>
+            <li><a asp-controller="app" asp-action="about">About</a></li>
+            <li><a asp-controller="app" asp-action="contact">Contact</a></li>
         </ul>
     </div>
     <div id="wrapper">
         <div id="main">
             <div>
-                <button id="sidebarToggle">Toggle Menu</button>
+                <button id="sidebarToggle">Hide</button>
             </div>
             @RenderBody()
         </div>
@@ -31,8 +31,9 @@
         </div>
     </div>
 
-    <script type="text/javascript" src="lib/jquery/dist/jquery.min.js"></script>
-    <script type="text/javascript" src="js/site.js"></script>
+    <script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
+    @RenderSection("scripts", false)
+    <script type="text/javascript" src="~/js/site.js"></script>
 
 </body>
 </html>
