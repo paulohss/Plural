@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TheWorld.Services;
+using TheWorld.Models;
 
 namespace TheWorld.Controllers.Web
 {
@@ -12,11 +13,19 @@ namespace TheWorld.Controllers.Web
     {
         private IMailServices _mailservices;
         private IConfigurationRoot _config;
+        private WordContext _context;
 
-        public AppController(IMailServices mailservices, IConfigurationRoot config)
+        /// <summary>
+        /// COnstructor
+        /// </summary>
+        /// <param name="mailservices"></param>
+        /// <param name="config"></param>
+        /// <param name="context"></param>
+        public AppController(IMailServices mailservices, IConfigurationRoot config, WordContext context)
         {
             _mailservices = mailservices;
             _config = config;
+            _context = context;
         }
 
 

@@ -46,6 +46,7 @@ namespace TheWorld
             if(_env.IsEnvironment("Development"))
                services.AddScoped<Services.IMailServices, Services.DebugMailService>();
 
+            services.AddDbContext<Models.WordContext>();
             services.AddMvc();
         }
 
