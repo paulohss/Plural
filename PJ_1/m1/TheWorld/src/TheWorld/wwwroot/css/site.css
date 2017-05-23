@@ -1,4 +1,4 @@
-﻿body{
+﻿/*body{
     font-family: sans-serif;
     font-size: 14px;
     margin:0;
@@ -17,9 +17,9 @@ input{
 
 input[type=submit], input[type=password], textarea{
     width:auto;
-} 
+}*/ 
 
-#main{
+/*#main{
     background-color:#eee;
     padding: 4px;
     margin: 0;
@@ -32,7 +32,7 @@ input[type=submit], input[type=password], textarea{
     position:fixed;
     bottom: 0;
     width:100%;
-}
+}*/
 
 .headshot{
     width:50px; 
