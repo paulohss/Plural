@@ -8,7 +8,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-
+using Newtonsoft.Json.Serialization;
+using AutoMapper;
+using TheWorld.ViewModels;
+using TheWorld.Models;
 
 /// <summary>
 /// Middleware
@@ -18,7 +21,7 @@ namespace TheWorld
     public class Startup
     {
         private IHostingEnvironment _env;
-       private IConfigurationRoot _config;
+        private IConfigurationRoot _config;
 
         public Startup(IHostingEnvironment env)
         {
@@ -43,19 +46,32 @@ namespace TheWorld
         {
             services.AddSingleton(_config);
 
-            if(_env.IsEnvironment("Development"))
-               services.AddScoped<Services.IMailServices, Services.DebugMailService>();
+            if (_env.IsEnvironment("Development"))
+                services.AddScoped<Services.IMailServices, Services.DebugMailService>();
 
             services.AddDbContext<Models.WordContext>();
-            services.AddMvc();
+            services.AddTransient<Models.WorldContextSeddData>();
+            services.AddScoped<Models.IWorldRepository, Models.WorldRepository>(); //using IWorldRepository interface cause the real instance is expensive and also it is possible to use test classes instead (eg TestWorldRepository implementing IWorldRepository)
+            services.AddLogging();
+            services.AddMvc()
+                            .AddJsonOptions(c =>
+                                c.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver()
+                                );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, Models.WorldContextSeddData seeder, ILoggerFactory factory)
         {
 
-            if(env.IsDevelopment())
-               app.UseDeveloperExceptionPage();
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+                factory.AddDebug(LogLevel.Information);
+            }
+            else
+            {
+                factory.AddDebug(LogLevel.Error);
+            }
 
             app.UseStaticFiles();
             app.UseMvc(config =>
@@ -64,7 +80,13 @@ namespace TheWorld
                 template: "{controller}/{action}/{id?}",
                 defaults: new { controller = "App", action = "Index" }
                 );
-             });
+            });
+
+            Mapper.Initialize(c =>
+                             c.CreateMap<TripViewModel, Trip>()
+                 ); //Tip: Can map diff prop names
+
+            seeder.EnsureData().Wait();
         }
     }
 }

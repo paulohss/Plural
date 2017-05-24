@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TheWorld.Services;
 using TheWorld.Models;
+using Microsoft.Extensions.Logging;
 
 namespace TheWorld.Controllers.Web
 {
@@ -13,7 +14,8 @@ namespace TheWorld.Controllers.Web
     {
         private IMailServices _mailservices;
         private IConfigurationRoot _config;
-        private WordContext _context;
+        private IWorldRepository _repository;
+        private ILogger<AppController> _logger;
 
         /// <summary>
         /// COnstructor
@@ -21,17 +23,29 @@ namespace TheWorld.Controllers.Web
         /// <param name="mailservices"></param>
         /// <param name="config"></param>
         /// <param name="context"></param>
-        public AppController(IMailServices mailservices, IConfigurationRoot config, WordContext context)
+        public AppController(IMailServices mailservices, IConfigurationRoot config, IWorldRepository repository, ILogger<AppController> logger)
         {
             _mailservices = mailservices;
             _config = config;
-            _context = context;
+            _repository = repository;
+            _logger = logger;
         }
 
 
         public IActionResult Index()
         {
-            return View();
+            try
+            {
+                var data = _repository.GetAllTrips();
+
+                return View(data);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return Redirect("/error");
+            }
         }
 
 

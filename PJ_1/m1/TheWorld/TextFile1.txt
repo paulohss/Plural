@@ -1,4 +1,10 @@
- (Alt+Shift+W)  div
+ div: Alt+Shift+W
 
 
- allign 
+ allign: ctrl+k+r
+
+ open cmd: alt+space
+
+ EF cdm:
+ - dotnet ef migrations add XXXBB
+ - dotnet ef database update
