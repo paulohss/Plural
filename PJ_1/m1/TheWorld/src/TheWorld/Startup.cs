@@ -12,6 +12,8 @@ using Newtonsoft.Json.Serialization;
 using AutoMapper;
 using TheWorld.ViewModels;
 using TheWorld.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 
 /// <summary>
 /// Middleware
@@ -44,13 +46,30 @@ namespace TheWorld
         // For more information on how to configure your application, visit http://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton(_config);
+           services.AddSingleton(_config);
 
             if (_env.IsEnvironment("Development"))
                 services.AddScoped<Services.IMailServices, Services.DebugMailService>();
+            else
+            {
+                services.AddMvc(c =>
+                    {
+                        c.Filters.Add(new RequireHttpsAttribute());
+                    }
+                );
+            }
+
+            services.AddIdentity<WorldUser, IdentityRole>(c =>
+            {
+                c.User.RequireUniqueEmail = true;
+                c.Password.RequiredLength = 8;
+                c.Cookies.ApplicationCookie.LoginPath = "/Auth/Login";
+            }
+            ).AddEntityFrameworkStores<Models.WordContext>();
 
             services.AddDbContext<Models.WordContext>();
             services.AddTransient<Models.WorldContextSeddData>();
+            services.AddTransient<Services.GeoCoordService>();
             services.AddScoped<Models.IWorldRepository, Models.WorldRepository>(); //using IWorldRepository interface cause the real instance is expensive and also it is possible to use test classes instead (eg TestWorldRepository implementing IWorldRepository)
             services.AddLogging();
             services.AddMvc()
@@ -62,7 +81,7 @@ namespace TheWorld
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, Models.WorldContextSeddData seeder, ILoggerFactory factory)
         {
-
+            // order matters!!
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -72,8 +91,9 @@ namespace TheWorld
             {
                 factory.AddDebug(LogLevel.Error);
             }
-
+            
             app.UseStaticFiles();
+            app.UseIdentity(); //turn on 
             app.UseMvc(config =>
             {
                 config.MapRoute(name: "Default",

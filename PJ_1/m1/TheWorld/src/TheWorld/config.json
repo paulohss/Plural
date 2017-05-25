@@ -4,5 +4,8 @@
   },
   "ConnStrings": {
     "TheWorld": "Data Source=emdata\\sql2014;DataBase=Plural;Trusted_Connection=true;MultipleActiveResultsets=true;"
+  },
+  "Keys": {
+    "BinKey": "DONT"
   }
 }

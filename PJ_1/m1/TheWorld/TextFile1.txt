@@ -8,3 +8,7 @@
  EF cdm:
  - dotnet ef migrations add XXXBB
  - dotnet ef database update
+
+
+
+ https://www.bingmapsportal.com/

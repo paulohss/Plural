@@ -7,9 +7,14 @@ using System.Threading.Tasks;
 using TheWorld.Services;
 using TheWorld.Models;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TheWorld.Controllers.Web
 {
+
+    /// <summary>
+    /// Control the pages
+    /// </summary>
     public class AppController : Controller
     {
         private IMailServices _mailservices;
@@ -36,10 +41,7 @@ namespace TheWorld.Controllers.Web
         {
             try
             {
-                var data = _repository.GetAllTrips();
-
-                return View(data);
-
+                return View();
             }
             catch (Exception ex)
             {
@@ -48,6 +50,13 @@ namespace TheWorld.Controllers.Web
             }
         }
 
+        [Authorize]
+        public IActionResult Trips()
+        {
+            var trips = _repository.GetAllTrips();
+
+            return View(trips);
+        }
 
         public IActionResult Contact()
         {

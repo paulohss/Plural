@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TheWorld.Models;
 using TheWorld.ViewModels;
-
+using TheWorld.Services;
 
 namespace TheWorld.Controllers.Api
 {
@@ -15,13 +15,15 @@ namespace TheWorld.Controllers.Api
     [Route("/api/trips/{tripName}/stops")]
     public class StopsController: Controller
     {
+        private GeoCoordService _coordService;
         private ILogger<StopsController> _logger;
         private IWorldRepository _repository;
 
-        public StopsController(IWorldRepository repository, ILogger<StopsController> logger)
+        public StopsController(IWorldRepository repository, ILogger<StopsController> logger, Services.GeoCoordService coordService)
         {
             _repository = repository;
             _logger = logger;
+            _coordService = coordService;
         }
 
         [HttpGet("")]
@@ -51,9 +53,19 @@ namespace TheWorld.Controllers.Api
 
                     _repository.AddStop(tripName, newStop);
 
-                    if(await _repository.SaveChangesAsync())
+                    var result = await _coordService.GetGeoCoordAsync(newStop.Name);
+                    if (result.Sucess)
                     {
-                        return Created($"/api/trips/{tripName}/stops/{newStop.Name}", Mapper.Map<StopViewModel>(newStop));
+                        if (await _repository.SaveChangesAsync())
+                        {
+                            newStop.Latitude = result.Latitude;
+                            newStop.Longitude = result.Longitude;
+                            return Created($"/api/trips/{tripName}/stops/{newStop.Name}", Mapper.Map<StopViewModel>(newStop));
+                        }
+                    }
+                    else
+                    {
+                        _logger.LogError(result.Message);
                     }
                 }
             }
