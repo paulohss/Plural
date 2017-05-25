@@ -17,6 +17,10 @@ namespace TheWorld.Models
 
         public async Task EnsureData()
         {
+            if (_context.Trips.Count() > 0)
+                return;
+
+
             var usTrip = new Trip()
             {
                 CreatedDate = DateTime.Now,

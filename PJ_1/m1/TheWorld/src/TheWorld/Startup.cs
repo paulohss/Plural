@@ -82,9 +82,11 @@ namespace TheWorld
                 );
             });
 
-            Mapper.Initialize(c =>
-                             c.CreateMap<TripViewModel, Trip>()
-                 ); //Tip: Can map diff prop names
+            Mapper.Initialize(c => {
+                c.CreateMap<TripViewModel, Trip>().ReverseMap();
+                c.CreateMap<StopViewModel, Stop>().ReverseMap();
+                }
+              ); //Tip: Can map diff prop names
 
             seeder.EnsureData().Wait();
         }

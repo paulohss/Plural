@@ -9,9 +9,9 @@ namespace TheWorld.ViewModels
     public class TripViewModel
     {
         [Required]
-        [StringLength(10, MinimumLength = 5)]
+        [StringLength(100, MinimumLength = 5)]
         public string Name { get; set; }
 
-        public DateTime DateCreated { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
     }
 }
