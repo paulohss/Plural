@@ -14,6 +14,7 @@ using TheWorld.ViewModels;
 using TheWorld.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 /// <summary>
 /// Middleware
@@ -64,6 +65,18 @@ namespace TheWorld
                 c.User.RequireUniqueEmail = true;
                 c.Password.RequiredLength = 8;
                 c.Cookies.ApplicationCookie.LoginPath = "/Auth/Login";
+                c.Cookies.ApplicationCookie.Events = new CookieAuthenticationEvents()
+                {
+                    OnRedirectToLogin = async ctx =>
+                    {
+                        if (ctx.Request.Path.StartsWithSegments("/api") && ctx.Response.StatusCode == 200)
+                            ctx.Response.StatusCode = 401;
+                        else
+                            ctx.Response.Redirect(ctx.RedirectUri);
+
+                        await Task.Yield();
+                    }
+                };
             }
             ).AddEntityFrameworkStores<Models.WordContext>();
 

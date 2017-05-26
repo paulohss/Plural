@@ -8,10 +8,11 @@ using System.Threading.Tasks;
 using TheWorld.Models;
 using TheWorld.ViewModels;
 using TheWorld.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TheWorld.Controllers.Api
 {
-
+    [Authorize]
     [Route("/api/trips/{tripName}/stops")]
     public class StopsController: Controller
     {
@@ -31,7 +32,7 @@ namespace TheWorld.Controllers.Api
         {
             try
             {
-                var trip = _repository.GetTripByName(tripName);
+                var trip = _repository.GetUserTripByName(tripName, User.Identity.Name);
                 return Ok(Mapper.Map<IEnumerable<StopViewModel>>(trip.Stops.OrderBy(s => s.Name)));
             }
             catch (Exception ex)
@@ -51,7 +52,7 @@ namespace TheWorld.Controllers.Api
                 {
                     var newStop = Mapper.Map<Stop>(stop);
 
-                    _repository.AddStop(tripName, newStop);
+                    _repository.AddStop(tripName, newStop, User.Identity.Name);
 
                     var result = await _coordService.GetGeoCoordAsync(newStop.Name);
                     if (result.Sucess)
