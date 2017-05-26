@@ -47,11 +47,11 @@ namespace TheWorld.Models
                 .FirstOrDefault();
         }
 
-        public IEnumerable<Trip> GetTripsByUserName(string name)
+        public IEnumerable<Trip> GetTripsByUserName(string userName)
         {
             return _context.Trips
                 .Include(t=>t.Stops)
-                .Where(x => x.Name == name)
+                .Where(x => x.UserName == userName)
                 .ToList();
         }
 
