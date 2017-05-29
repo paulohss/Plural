@@ -13,7 +13,7 @@
         //}];
         viewModel.trips = [];
 
-        viewModel.newTrip = {};
+        viewModel.newTrip = {}; //newTrip = Form in the UI
 
         viewModel.errorMessage = "";
         viewModel.isBusy = true;
@@ -33,8 +33,21 @@
 
         //Add new item into the collection
         viewModel.addTrip = function () {
-            viewModel.trips.push({ name: viewModel.newTrip.name, created: new Date() });
-            viewModel.newTrip = {};
+            //viewModel.trips.push({ name: viewModel.newTrip.name, created: new Date() });
+            //viewModel.newTrip = {};
+            viewModel.isBusy = true;
+            viewModel.errorMessage = "";
+
+            $http.post("/api/trips", viewModel.newTrip)
+               .then(function (response) {
+                   viewModel.trips.push(response.data);
+                   viewModel.newTrip = {};
+               }, function () {
+                   viewModel.errorMessage = "Pau!";
+               })
+               .finally(function () {
+                   viewModel.isBusy = false;
+               });               
         };
 
         //
