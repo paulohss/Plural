@@ -13,11 +13,11 @@
               templateUrl: "/views/tripsView.html"
           });
 
-          //$routeProvider.when("/editor/:tripName", {
-          //    controller: "tripEditorController",
-          //    controllerAs: "vm",
-          //    templateUrl: "/views/tripEditorView.html"
-          //});
+          $routeProvider.when("/editor/:tripName", {  //        /*used at tripview <td><a ng-href="#/editor/{{ trip.name }}" bla bal*/
+              controller: "tripEditorController",           
+              controllerAs: "viewModel",
+              templateUrl: "/views/tripEditorView.html"
+          });
 
           $routeProvider.otherwise({ redirectTo: "/" });
 
