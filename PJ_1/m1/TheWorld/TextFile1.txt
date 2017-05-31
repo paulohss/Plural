@@ -9,6 +9,11 @@
  - dotnet ef migrations add XXXBB
  - dotnet ef database update
 
+ Deploying
+ - add npm (pacjage.json) edit it
+ - add gulpfile.js edit it
+ - DOS: gulp minify
+ - rigth click on  gulpfile.js and 'Task Runner Exprorer'
 
 
  https://www.bingmapsportal.com/
